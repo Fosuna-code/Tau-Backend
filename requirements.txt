@@ -1,0 +1,11 @@
+asgiref==3.10.0
+Django==5.0.6
+django-cors-headers==4.3.1
+django-imagekit==5.0.0
+Pillow==11.1.0
+PyJWT==2.10.1
+python-multipart==0.0.9
+sqlparse==0.5.3
+strawberry-graphql==0.227.1
+strawberry-graphql-django==0.39.0
+uvicorn==0.29.0
