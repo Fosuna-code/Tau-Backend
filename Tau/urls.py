@@ -25,7 +25,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("graphql/", csrf_exempt(GraphQLView.as_view(schema=schema, multipart_uploads_enabled=True))),
+    path("graphql/", csrf_exempt(GraphQLView.as_view(schema=schema))),
 ]
 
 if settings.DEBUG:
