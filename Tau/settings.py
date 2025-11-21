@@ -48,7 +48,17 @@ AUTHENTICATION_BACKENDS = [
 GQL_AUTH = GqlAuthSettings(
     LOGIN_REQUIRE_CAPTCHA=False,
     REGISTER_REQUIRE_CAPTCHA=False,
+    ALLOW_LOGIN_NOT_VERIFIED=True,
 )
+GRAPHQL_JWT = {
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
+    "JWT_ALLOW_ANY_CLASSES": [
+        "strawberry.types.execution.ExecutionContext",
+    ],
+    "JWT_EXPIRATION_DELTA": timedelta(minutes=15),
+    "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=7),
+}
 
 # Required by gqlauth to initialize, even if you don't use Stripe
 STRIPE_PUBLISHABLE_KEY = "dummy"
