@@ -140,4 +140,4 @@ class Mutation:
         return count
 
 # 3. Create the Schema object
-schema = strawberry.Schema(query=Query, mutation=Mutation)
+# schema = strawberry.Schema(query=Query, mutation=Mutation)

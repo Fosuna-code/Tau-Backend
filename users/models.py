@@ -1,28 +1,19 @@
-from django.db import models
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True) # Force unique emails
-    is_premium = models.BooleanField(default=False) # For your subscription logic
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    # We make email unique and required for a modern auth system
+    email = models.EmailField(unique=True, verbose_name="email address")
+    
+    # Custom fields we added in the schema
+    full_name = models.CharField(max_length=255, blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True)
 
-    # Fix the "reverse accessor" conflicts
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='customuser_set',
-        blank=True,
-        help_text='The groups this user belongs to.',
-        verbose_name='groups',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='customuser_set',
-        blank=True,
-        help_text='Specific permissions for this user.',
-        verbose_name='user permissions',
-    )
+    # Standard Django configurations
+    USERNAME_FIELD = "username"
+    EMAIL_FIELD = "email"
+    # Fields required when running 'python manage.py createsuperuser'
+    REQUIRED_FIELDS = ["email"]
 
-    USERNAME_FIELD = 'email' # Log in with Email, not Username
-    REQUIRED_FIELDS = ['username']
+    def __str__(self):
+        return self.username
