@@ -27,28 +27,36 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://localhost:5173",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000", 
     "http://127.0.0.1:3000",
     "http://localhost:8000", 
-    "http://127.0.0.1:8000"
+    "http://127.0.0.1:8000",
+    "http://localhost:5173",
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # --- 2. AUTHENTICATION BACKENDS ---
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    "gqlauth.core.backends.JSONWebTokenBackend", 
+    "users.backends.EmailBackend",  # Custom backend for email-based login
+    "django.contrib.auth.backends.ModelBackend",  # Default Django backend
+    # Note: JWT authentication is handled by gqlauth.core.middlewares.django_jwt_middleware
+    # in the MIDDLEWARE section, not here
 ]
 
 
 # --- 4. GQLAUTH SETTINGS ---
+# Email-based login is handled by the custom EmailBackend in AUTHENTICATION_BACKENDS
+# The tokenAuth mutation accepts a 'username' parameter, but our EmailBackend
+# will recognize email addresses (containing '@') and authenticate accordingly
 GQL_AUTH = GqlAuthSettings(
     LOGIN_REQUIRE_CAPTCHA=False,
     REGISTER_REQUIRE_CAPTCHA=False,
     ALLOW_LOGIN_NOT_VERIFIED=True,
+    
 )
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,

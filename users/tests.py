@@ -16,9 +16,7 @@ class RegisterMutationTest(TestCase):
                 register(
                     username: "testuser",
                     email: "test@example.com",
-                    password: "Str0ng!Passw0rd123", 
-                    fullName: "Test User",
-                    dateOfBirth: "1990-01-01"
+                    password: "Str0ng!Passw0rd123"
                 ) {
                     username
                     email
@@ -52,10 +50,8 @@ class RegisterMutationTest(TestCase):
         self.assertEqual(data['username'], "testuser")
         
         # 7. Verify Database
-        # Ensure the data actually saved to the DB with the correct custom fields
+        # Ensure the data actually saved to the DB
         user = CustomUser.objects.get(email="test@example.com")
-        self.assertEqual(user.full_name, "Test User")
-        self.assertEqual(str(user.date_of_birth), "1990-01-01")
         
         # Verify password was hashed (not plain text)
         self.assertTrue(user.check_password("Str0ng!Passw0rd123"))

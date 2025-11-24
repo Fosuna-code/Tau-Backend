@@ -1,9 +1,11 @@
 import strawberry
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from gqlauth.user import arg_mutations as mutations
 from gqlauth.user.queries import UserQueries
 from gqlauth.core.middlewares import JwtSchema
+from gqlauth.jwt.types_ import TokenType, ObtainJSONWebTokenInput, ObtainJSONWebTokenType
 from .models import CustomUser
 
 # 1. Define Custom User Type
@@ -13,8 +15,6 @@ from .models import CustomUser
 class AccountType:
     username: str
     email: str
-    full_name: str | None
-    date_of_birth: strawberry.auto # 'auto' automatically maps the Date type
 
 # 2. Define Query
 # We inherit the library's queries (like 'me', 'public_user')
@@ -23,10 +23,28 @@ class Query(UserQueries):
     pass 
 
 # 3. Define Mutation
+#This is to fix the error that occurs when you try to login with email
+class CustomObtainJSONWebToken(mutations.ObtainJSONWebToken):
+    @classmethod
+    def resolve_mutation(cls, info, input_: ObtainJSONWebTokenInput) -> ObtainJSONWebTokenType:
+        # Fix for "ObtainJSONWebTokenInput object has no attribute 'email'"
+        # gqlauth expects 'email' attribute because USERNAME_FIELD='email',
+        # but the input object only has 'username'.
+        if not hasattr(input_, 'email') and hasattr(input_, 'username'):
+            # We can't easily set attribute on frozen dataclass, so we might need to rely on
+            # the fact that it's a standard class or use a workaround.
+            # Strawberry inputs are often simple objects.
+            try:
+                setattr(input_, 'email', input_.username)
+            except AttributeError:
+                pass
+                
+        return super().resolve_mutation(info, input_)
+
 @strawberry.type
 class Mutation:
     # --- Standard Auth Tools (Login/Tokens) ---
-    token_auth = mutations.ObtainJSONWebToken.field
+    token_auth = CustomObtainJSONWebToken.field
     verify_token = mutations.VerifyToken.field
     refresh_token = mutations.RefreshToken.field
     revoke_token = mutations.RevokeToken.field
@@ -45,9 +63,7 @@ class Mutation:
         self, 
         username: str, 
         email: str, 
-        password: str, 
-        full_name: str | None = None,
-        date_of_birth: str | None = None
+        password: str
     ) -> AccountType:
         
         # Step A: Security - Check Password Strength
@@ -70,12 +86,15 @@ class Mutation:
         user = CustomUser.objects.create_user(
             username=username, 
             email=email, 
-            password=password,
-            full_name=full_name,
-            date_of_birth=date_of_birth
+            password=password
         )
         
         return user
+
+    @strawberry.mutation
+    def delete_all_users(self) -> str:
+        count, _ = CustomUser.objects.all().delete()
+        return f"Deleted {count} users"
 
 # 4. Schema Wrapper
 # We keep this here so this file can be tested in isolation if needed.
