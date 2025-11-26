@@ -56,7 +56,6 @@ GQL_AUTH = GqlAuthSettings(
     LOGIN_REQUIRE_CAPTCHA=False,
     REGISTER_REQUIRE_CAPTCHA=False,
     ALLOW_LOGIN_NOT_VERIFIED=True,
-    
 )
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
@@ -66,6 +65,15 @@ GRAPHQL_JWT = {
     ],
     "JWT_EXPIRATION_DELTA": timedelta(minutes=15),
     "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=7),
+    
+    # Cookie Configuration
+    "JWT_AUTH_COOKIE": "tau_auth_token",
+    "JWT_AUTH_REFRESH_COOKIE": "tau_refresh_token",
+    
+    # HttpOnly and Security Settings
+    "JWT_COOKIE_HTTPONLY": True,           # Prevents JavaScript access (XSS protection)
+    "JWT_COOKIE_SECURE": False,            # Set to True in production (requires HTTPS)
+    "JWT_COOKIE_SAMESITE": "Lax",          # CSRF protection (Lax allows navigation)
 }
 
 # Required by gqlauth to initialize, even if you don't use Stripe
