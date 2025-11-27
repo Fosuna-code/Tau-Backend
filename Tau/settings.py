@@ -48,6 +48,20 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 
+# --- 3. EMAIL BACKEND ---
+# Check for SMTP credentials in environment
+if os.environ.get('EMAIL_HOST_USER') and os.environ.get('EMAIL_HOST_PASSWORD'):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+    EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+    DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+else:
+    # Fallback to console for development if no credentials provided
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # --- 4. GQLAUTH SETTINGS ---
 # Email-based login is handled by the custom EmailBackend in AUTHENTICATION_BACKENDS
 # The tokenAuth mutation accepts a 'username' parameter, but our EmailBackend
@@ -55,7 +69,9 @@ AUTHENTICATION_BACKENDS = [
 GQL_AUTH = GqlAuthSettings(
     LOGIN_REQUIRE_CAPTCHA=False,
     REGISTER_REQUIRE_CAPTCHA=False,
-    ALLOW_LOGIN_NOT_VERIFIED=True,
+    ALLOW_LOGIN_NOT_VERIFIED=False, # Enforce verification
+    SEND_ACTIVATION_EMAIL=True,
+    ACTIVATION_PATH_ON_EMAIL="activate-account",
 )
 GRAPHQL_JWT = {
     "JWT_VERIFY_EXPIRATION": True,
@@ -122,7 +138,7 @@ ROOT_URLCONF = "Tau.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

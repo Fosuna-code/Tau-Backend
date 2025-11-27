@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    /* ===== BASE ===== */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f6f9fb;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .email-wrapper {
+      width: 100%;
+      padding: 40px 0;
+      background: #f6f9fb;
+    }
+
+    .email-container {
+      max-width: 680px;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(16, 8, 32, 0.15);
+    }
+
+    /* ===== LOGO TAU ===== */
+    .tau-logo-text {
+      font-size: 28px;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+      letter-spacing: 2px;
+    }
+
+    .tau-logo-text-dark {
+      font-size: 24px;
+      font-weight: bold;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #24002f;
+      letter-spacing: 2px;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(90deg, #3a0059, #5b0b6b);
+      padding: 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .hero {
+      padding: 34px 36px 18px;
+      text-align: left;
+    }
+
+    .hero h2 {
+      font-size: 22px;
+      margin: 0 0 8px 0;
+    }
+
+    .hero p {
+      color: #4b4b5a;
+      font-size: 16px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: #eef7fb;
+      margin: 20px 36px;
+      padding: 22px;
+      border-radius: 14px;
+      text-align: center;
+    }
+
+    .card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .cta {
+      display: inline-block;
+      background: linear-gradient(90deg, #a64bff, #ff2bd8);
+      color: white;
+      padding: 12px 26px;
+      border-radius: 30px;
+      text-decoration: none;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .meta {
+      color: #7b7f8a;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    /* ===== LEGAL ===== */
+    .legal {
+      padding: 20px 36px;
+      color: #7b7f8a;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    /* ===== FIRMA ===== */
+    .signature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 36px 40px;
+      background: #f6f0ff;
+    }
+
+    .sig-info {
+      color: #24002f;
+    }
+
+    .sig-info span {
+      color: #6b5f77;
+    }
+
+    .sig-links a {
+      color: #a64bff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: #0f0b13;
+      padding: 18px 36px;
+      color: #cbbbe0;
+      text-align: left;
+    }
+
+    .footer-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .copy {
+      text-align: right;
+      font-size: 12px;
+      margin-top: 10px;
+      color: #bca7d6;
+    }
+  </style>
+</head>
+
+<body>
+  <center class="email-wrapper">
+    <table role="presentation" class="email-container" width="100%" cellpadding="0" cellspacing="0">
+      
+      <!-- HEADER -->
+      <tr>
+        <td class="header">
+          <div class="header-content" style="text-align: center;">
+            <img src="https://res.cloudinary.com/dmirbr9rf/image/upload/v1764199744/Untitled_teaqaw.png" alt="Tau" width="50" height="50" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+            <span class="tau-logo-text" style="vertical-align: middle;">TAU</span>
+          </div>
+        </td>
+      </tr>
+
+      <!-- MENSAJE PRINCIPAL -->
+      <tr>
+        <td class="hero">
+          <h2>¡Ya queda poco!</h2>
+          <p>Haz clic en el botón para completar la verificación de tu cuenta y comenzar a disfrutar de contenido de Nayarit con <strong>Tau</strong>.</p>
+        </td>
+      </tr>
+
+      <!-- CARD BOTÓN -->
+      <tr>
+        <td class="card">
+          <h3>¡Vamos a ayudarte a completar el proceso!</h3>
+          <p>Este enlace caducará el <strong>Nov 26, 2025</strong>.</p>
+
+          <a href="{{ protocol }}://{{ domain }}/{{ path }}/{{ token }}" class="cta" style="color: white !important; background: linear-gradient(90deg, #a64bff, #ff2bd8); text-decoration: none;">Terminar de verificar</a>
+
+          <p class="meta">Si no solicitaste esta verificación, ignora este correo.</p>
+        </td>
+      </tr>
+
+      <!-- LEGAL -->
+      <tr>
+        <td class="legal">
+          <p>Saludos cordiales,<br><strong>Tau</strong></p>
+          <p>Ha recibido este correo electrónico porque solicitó verificar su cuenta.</p>
+          <p>Tau sólo se comunicará con usted para confirmar su cuenta.</p>
+        </td>
+      </tr>
+
+      <!-- FIRMA -->
+      <tr>
+        <td class="signature">
+          <img src="https://res.cloudinary.com/dmirbr9rf/image/upload/v1764199744/Untitled_teaqaw.png" alt="Tau" width="40" height="40" style="display: inline-block; vertical-align: middle; margin-right: 10px;">
+          <span class="tau-logo-text-dark" style="vertical-align: middle;">TAU</span>
+
+          <div class="sig-info" style="margin-left: 14px;">
+            <strong>Equipo Tau</strong><br />
+            <span>Atención y soporte</span><br />
+            <div class="sig-links">
+              <a href="#">tau.mx</a> ·
+              <a href="#">Instagram</a> ·
+              <a href="#">Contacto</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+
+      <!-- FOOTER -->
+      <tr>
+        <td class="footer">
+          <div class="footer-content">
+            <img src="https://res.cloudinary.com/dmirbr9rf/image/upload/v1764199744/Untitled_teaqaw.png" alt="Tau" width="35" height="35" style="display: inline-block; vertical-align: middle; margin-right: 12px;">
+            <div>
+              <strong>Tau</strong>
+              <p>Celebrando el cine y la cultura de Nayarit.</p>
+            </div>
+          </div>
+          <p class="copy">© 2025 Tau</p>
+        </td>
+      </tr>
+
+    </table>
+  </center>
+</body>
+</html>

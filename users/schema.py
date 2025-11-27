@@ -230,6 +230,35 @@ class CustomRevokeToken(mutations.RevokeToken):
 
         return result
 
+class CustomVerifyAccount(mutations.VerifyAccount):
+    @classmethod
+    def resolve_mutation(cls, info, input_: resolvers.VerifyAccountMixin.VerifyAccountInput) -> resolvers.MutationNormalOutput:
+        # Call the parent resolver first
+        result = super().resolve_mutation(info, input_)
+        
+        # If verification was successful, also set is_active=True
+        if result.success:
+            # The parent resolver already verified the user via UserStatus
+            # Now we need to activate the user account
+            try:
+                # Get the user from the token
+                from gqlauth.models import UserStatus
+                from django.contrib.auth import get_user_model
+                
+                User = get_user_model()
+                # Find the user that was just verified
+                # We can search for recently verified users
+                user_status = UserStatus.objects.filter(verified=True).order_by('-id').first()
+                if user_status and user_status.user:
+                    user = user_status.user
+                    user.is_active = True
+                    user.save()
+            except Exception as e:
+                # Log but don't fail the verification
+                print(f"Error activating user: {e}")
+        
+        return result
+
 @strawberry.type
 class Mutation:
     # --- Standard Auth Tools (Login/Tokens) ---
@@ -239,7 +268,7 @@ class Mutation:
     revoke_token = CustomRevokeToken.field
 
     # --- Account Management Helpers ---
-    verify_account = mutations.VerifyAccount.field
+    verify_account = CustomVerifyAccount.field
     update_account = mutations.UpdateAccount.field
     delete_account = mutations.DeleteAccount.field
     password_change = mutations.PasswordChange.field
@@ -250,6 +279,7 @@ class Mutation:
     @strawberry.mutation
     def register(
         self, 
+        info,
         username: str, 
         email: str, 
         password: str
@@ -272,11 +302,25 @@ class Mutation:
 
         # Step C: Create the user safely
         # .create_user() handles the password hashing for us.
-        user = CustomUser.objects.create_user(
-            username=username, 
-            email=email, 
-            password=password
-        )
+        # We use transaction.atomic to ensure user creation and email sending (or status update) happen together
+        from django.db import transaction
+
+        with transaction.atomic():
+            user = CustomUser.objects.create_user(
+                username=username, 
+                email=email, 
+                password=password
+            )
+            
+            # Force "Unverified" state
+            user.is_active = False
+            user.save()
+            
+            # Send Email using Library Utility
+            # gqlauth attaches a 'status' OneToOne field to the user (UserStatus model)
+            # We call the method on that related object.
+            if hasattr(user, 'status'):
+                user.status.send_activation_email(info)
         
         return user
 
