@@ -16,7 +16,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-qs36i#k6kewr98
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1 localhost").split(" ")
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1 localhost pgaebbga2s.us-east-1.awsapprunner.com").split(" ")
 
 # --- 1. CORS CONFIGURATION (Updated for Cookies) ---
 # We cannot use ALLOW_ALL_ORIGINS = True if we want to use Cookies (Credentials).
@@ -28,6 +28,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://localhost:5173",
+    "https://production.d1hn7bwhpawu23.amplifyapp.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000", 
@@ -35,6 +36,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000", 
     "http://127.0.0.1:8000",
     "http://localhost:5173",
+    "https://production.d1hn7bwhpawu23.amplifyapp.com",
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
